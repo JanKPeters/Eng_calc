@@ -69,8 +69,9 @@ def htcalc (air_velocity_inside, air_velocity_outside, t_inside, t_outside, surf
         gg += p9.geom_text(p9.aes(x = position[i], y = temp+30, label = round(temp, 2)))
         i += 1
 
-    labtext = 'Thermal cond.: ' + str(thermal_conductivity[0]) + '[W/m/K]\nLayer thickness: ' + str(round(wall_thickness[0], 3)) + '[m]'
-    gg += p9.annotate(geom='text', x = ((position[2]-position[1])/2)+position[1], y = temperatures[0]+30, 
-                      label = labtext, color='blue')
+    for i in range(layers):
+        labtext = 'Thermal cond.: ' + str(thermal_conductivity[i]) + '[W/m/K]\nLayer thickness: ' + str(round(wall_thickness[i], 3)) + '[m]'
+        gg += p9.annotate(geom='text', x = ((position[i+2]-position[i+1])/2)+position[i+1], y = temperatures[i]+30, 
+                        label = labtext, color='blue')
 
     return gg

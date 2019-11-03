@@ -9,7 +9,7 @@ class MainWindow(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.title = 'Engineering calculations'
-        self.icon = 'pictures/chart64.png'
+        self.icon = '~/Insync/jan.k.peters@gmail.com/Google Drive/CODE/python/Eng_calc/Eng_calc/pictures/chart64.png'
         self.left = 10
         self.top = 10
         self.width = 1300
@@ -39,6 +39,21 @@ class MainWindow(QtWidgets.QDialog):
             self.inputs[i] = QtWidgets.QLineEdit(self)
             self.inputs[i].setText(stdvalue[i])
             self.unit[i] = QtWidgets.QLabel(unittext[i])
+        
+        self.maxlayer = 5
+        self.ltname = {}
+        self.ltinputs = {}
+        self.ltunit = {}
+        self.lcname = {}
+        self.lcinputs = {}
+        self.lcunit = {}
+        for i in range(self.maxlayer+1):
+            self.ltname[i] = QtWidgets.QLabel('Thickness')
+            self.ltinputs[i] = QtWidgets.QLineEdit(self)
+            self.ltunit[i] = QtWidgets.QLabel('m')
+            self.lcname[i] = QtWidgets.QLabel('Therm. cond.')
+            self.lcinputs[i] = QtWidgets.QLineEdit(self)
+            self.lcunit[i] = QtWidgets.QLabel('W/K/m')
             
         # THE button to calculate the case
         self.button = QtWidgets.QPushButton('Calculate')
@@ -51,10 +66,22 @@ class MainWindow(QtWidgets.QDialog):
             layoutParam[i].addWidget(self.name[i], 4)
             layoutParam[i].addWidget(self.inputs[i], 2)
             layoutParam[i].addWidget(self.unit[i], 1)
-              
+        
+        layoutlayerParam = {}
+        for i in range(self.maxlayer+1):
+            layoutlayerParam[i] = QtWidgets.QHBoxLayout()
+            layoutlayerParam[i].addWidget(self.ltname[i], 2)
+            layoutlayerParam[i].addWidget(self.ltinputs[i], 1)
+            layoutlayerParam[i].addWidget(self.ltunit[i], 1)
+            layoutlayerParam[i].addWidget(self.lcname[i], 2)
+            layoutlayerParam[i].addWidget(self.lcinputs[i], 1)
+            layoutlayerParam[i].addWidget(self.lcunit[i], 1)      
+                
         layoutInput = QtWidgets.QVBoxLayout()
         for i in range(len(layoutParam)):
             layoutInput.addLayout(layoutParam[i])
+        for i in range(self.maxlayer+1):
+            layoutInput.addLayout(layoutlayerParam[i])
         layoutInput.addWidget(self.button)
         
         layoutGraph = QtWidgets.QVBoxLayout()
@@ -67,20 +94,40 @@ class MainWindow(QtWidgets.QDialog):
         self.setLayout(layoutMain)
             
     
+    def add_layer(self):
+        if self.layerbtn[0].isChecked():
+            number = 1
+        else:
+            number = 0 
+        print(number)
+    
+    
     def plot(self):
+        self.figure.clf() # Not clearing previous plot it seems???
         gasVelIn = self.inputs[0].text()
         gasVelOut = self.inputs[1].text()
         gasTempIn = self.inputs[2].text()
         gasTempOut = self.inputs[3].text()
         surfaceArea = self.inputs[4].text()
-        gg = htcalc(float(gasVelIn), float(gasVelOut), float(gasTempIn), float(gasTempOut), float(surfaceArea), 3, [0.18, 0.07, 0.03], [1.1, 0.89, 45])
+        
+        layerth = []
+        for i in range(self.maxlayer+1):
+            if self.ltinputs[i].text() != "" and self.ltinputs[i].text() != '0':
+                layerth.append(float(self.ltinputs[i].text()))
+        
+        thermo = []
+        for i in range(len(layerth)):
+            thermo.append(float(self.lcinputs[i].text()))
+        
+        layernr = len(layerth)
+        
+        gg = htcalc(float(gasVelIn), float(gasVelOut), float(gasTempIn), float(gasTempOut), float(surfaceArea), layernr, layerth, thermo)
         fig = gg.draw()
-        self.figure.clear()
-        self.figure.tight_layout()
         self.canvas.figure = fig
         self.canvas.draw()
         plt.close(fig)
         
+            
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
