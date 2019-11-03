@@ -31,7 +31,7 @@ def htcalc (air_velocity_inside, air_velocity_outside, t_inside, t_outside, surf
 
     # Preparing the x axis, position of the temperature and transition labels for the graph
     position = [0, 0.02]
-    labels = ['gas inside', 'inner surface']
+    labels = ['fluid inside', 'inner surface']
 
     i = 0
     for entry in wall_thickness:
@@ -41,7 +41,7 @@ def htcalc (air_velocity_inside, air_velocity_outside, t_inside, t_outside, surf
 
     labels[-1] = "outer surface"
     position.append(position [-1] + 0.02)
-    labels.append("gas outside")
+    labels.append("fluid outside")
 
     # print(f"\nThe total resistance is {round(total_resistance, 2)} K/W")
     # print(f"Total heat transfer from inside to outside is {round(heat_transfer, 2)} W\n")
@@ -60,7 +60,7 @@ def htcalc (air_velocity_inside, air_velocity_outside, t_inside, t_outside, surf
     # gg += p9.geom_hline(yintercept=110, color='red', size=2, alpha=0.8)
     gg += p9.ggtitle('heat transfer through wall')
     gg += p9.scale_x_continuous(name='Position', breaks=df.pos.values.tolist(), labels=labels)
-    gg += p9.scale_y_continuous(name='Temperature', breaks=range(0,800,50), limits=(0,800))
+    gg += p9.scale_y_continuous(name='Temperature')
     gg += p9.theme(axis_text_x=p9.element_text(angle = 45))
     gg += p9.scale_colour_gradient(low = "yellow", high = "orange")
 
@@ -70,7 +70,7 @@ def htcalc (air_velocity_inside, air_velocity_outside, t_inside, t_outside, surf
         i += 1
 
     for i in range(layers):
-        labtext = 'Thermal cond.: ' + str(thermal_conductivity[i]) + '[W/m/K]\nLayer thickness: ' + str(round(wall_thickness[i], 3)) + '[m]'
+        labtext = 'Thermal cond.: ' + str(thermal_conductivity[i]) + ' [W/m°K]\nLayer thickness: ' + str(round(wall_thickness[i], 3)) + ' [m]'
         gg += p9.annotate(geom='text', x = ((position[i+2]-position[i+1])/2)+position[i+1], y = temperatures[i]+30, 
                         label = labtext, color='blue')
 

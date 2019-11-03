@@ -27,7 +27,7 @@ class MainWindow(QtWidgets.QDialog):
         self.toolbar = NavigationToolbar(self.canvas, self)
         
         # Input fields to change the parameters of the calculation
-        nametext = ['Gas Velocity Inside', 'Gas Velocity Outside', 'Gas Temperatur Inside', 'Gas Temperature Outside', 'Surface Area']
+        nametext = ['Gas Velocity Inside', 'Gas Velocity Outside', 'Gas Temperature Inside', 'Gas Temperature Outside', 'Surface Area']
         unittext = ['m/s', 'm/s', '°C', '°C', 'm²']
         stdvalue = ['4', '0.5', '21', '4', '1']
         
@@ -53,7 +53,7 @@ class MainWindow(QtWidgets.QDialog):
             self.ltunit[i] = QtWidgets.QLabel('m')
             self.lcname[i] = QtWidgets.QLabel('Therm. cond.')
             self.lcinputs[i] = QtWidgets.QLineEdit(self)
-            self.lcunit[i] = QtWidgets.QLabel('W/K/m')
+            self.lcunit[i] = QtWidgets.QLabel('W/m°K')
             
         # THE button to calculate the case
         self.button = QtWidgets.QPushButton('Calculate')
